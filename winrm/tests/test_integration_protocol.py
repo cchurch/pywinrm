@@ -1,13 +1,19 @@
 import re
 import pytest
 xfail = pytest.mark.xfail
-
+from winrm.exceptions import *
 
 def test_open_shell_and_close_shell(protocol_real):
     shell_id = protocol_real.open_shell()
     assert re.match('^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$', shell_id)
 
     protocol_real.close_shell(shell_id)
+
+
+def test_open_shell_and_close_shell_with_bad_auth(protocol_real):
+    with pytest.raises(WinRMTransportError):
+        protocol_real.transport.password = 'BadPassWord'
+        shell_id = protocol_real.open_shell()
 
 
 def test_run_command_with_arguments_and_cleanup_command(protocol_real):

@@ -317,7 +317,7 @@ def protocol_fake(request):
     return protocol_fake
 
 
-@fixture(scope='module')
+@fixture(scope='function')
 def protocol_real():
     config_path = os.path.join(os.path.dirname(__file__), 'config.json')
     if os.path.isfile(config_path):
