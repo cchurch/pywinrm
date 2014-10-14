@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from isodate.isoduration import duration_isoformat
 import xmltodict
 from winrm.transport import HttpPlaintext, HttpKerberos, HttpSSL
+from winrm.unified_transport import Transport
 
 
 class Protocol(object):
@@ -16,7 +17,7 @@ class Protocol(object):
     DEFAULT_MAX_ENV_SIZE = 153600
     DEFAULT_LOCALE = 'en-US'
 
-    def __init__(self, endpoint, transport='plaintext', username=None, password=None, realm=None, service=None, keytab=None, ca_trust_path=None, cert_pem=None, cert_key_pem=None):
+    def __init__(self, endpoint, transport='unified', username=None, password=None, realm=None, service=None, keytab=None, ca_trust_path=None, cert_pem=None, cert_key_pem=None):
         """
         @param string endpoint: the WinRM webservice endpoint
         @param string transport: transport type, one of 'kerberos' (default), 'ssl', 'plaintext'
@@ -33,10 +34,12 @@ class Protocol(object):
         self.timeout = Protocol.DEFAULT_TIMEOUT
         self.max_env_sz = Protocol.DEFAULT_MAX_ENV_SIZE
         self.locale = Protocol.DEFAULT_LOCALE
-        if transport == 'plaintext':
+        if transport == 'unified':
+            self.transport = Transport(endpoint, username, password, realm, service, keytab, ca_trust_path, cert_pem, cert_key_pem)
+        elif transport == 'plaintext':
             self.transport = HttpPlaintext(endpoint, username, password)
         elif transport == 'kerberos':
-            self.transport = HttpKerberos(endpoint)
+            self.transport = HttpKerberos(endpoint, realm, service, keytab)
         elif transport == 'ssl':
             self.transport = HttpSSL(endpoint, username, password, cert_pem=cert_pem, cert_key_pem=cert_key_pem)
         else:
