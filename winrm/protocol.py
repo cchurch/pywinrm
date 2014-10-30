@@ -5,7 +5,8 @@ import xml.etree.ElementTree as ET
 from isodate.isoduration import duration_isoformat
 import xmltodict
 from winrm.transport import HttpPlaintext, HttpKerberos, HttpSSL
-from winrm.unified_transport import Transport
+from winrm.unified_transport import Transport as UnifiedTransport
+from winrm.requests_transport import Transport as RequestsTransport
 
 
 class Protocol(object):
@@ -35,7 +36,9 @@ class Protocol(object):
         self.max_env_sz = Protocol.DEFAULT_MAX_ENV_SIZE
         self.locale = Protocol.DEFAULT_LOCALE
         if transport == 'unified':
-            self.transport = Transport(endpoint, username, password, realm, service, keytab, ca_trust_path, cert_pem, cert_key_pem)
+            self.transport = UnifiedTransport(endpoint, username, password, realm, service, keytab, ca_trust_path, cert_pem, cert_key_pem)
+        elif transport == 'requests':
+            self.transport = RequestsTransport(endpoint, username, password, realm, service, keytab, ca_trust_path, cert_pem, cert_key_pem)
         elif transport == 'plaintext':
             self.transport = HttpPlaintext(endpoint, username, password)
         elif transport == 'kerberos':
