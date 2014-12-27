@@ -35,6 +35,7 @@ class Protocol(object):
         self.timeout = Protocol.DEFAULT_TIMEOUT
         self.max_env_sz = Protocol.DEFAULT_MAX_ENV_SIZE
         self.locale = Protocol.DEFAULT_LOCALE
+        transport = 'requests'
         if transport == 'unified':
             self.transport = UnifiedTransport(endpoint, username, password, realm, service, keytab, ca_trust_path, cert_pem, cert_key_pem)
         elif transport == 'requests':

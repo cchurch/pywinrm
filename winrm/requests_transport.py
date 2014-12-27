@@ -232,7 +232,7 @@ class MultiAuth(requests.auth.AuthBase):
 
         for auth_scheme in auths_to_try:
             for auth_instance in self.auth_map[auth_scheme]:
-                print 'trying', auth_instance, 'for', auth_scheme
+                #print 'trying', auth_instance, 'for', auth_scheme
 
                 # Consume content and release the original connection
                 # to allow our new request to reuse the same one.
@@ -250,7 +250,7 @@ class MultiAuth(requests.auth.AuthBase):
                 new_response.request = prepared_request
         
                 if new_response.status_code != 401:
-                    print auth_instance, 'successful for', auth_scheme
+                    #print auth_instance, 'successful for', auth_scheme
                     self.current_auth = auth_instance
                     return new_response
                 response = new_response
